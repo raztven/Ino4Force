@@ -31,10 +31,19 @@
             </p>
           </div>
 
+          <!-- Error Alert Mobile -->
+          <div
+            v-if="errorMessage"
+            class="mx-auto mt-4 max-w-[330px] flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-2.5 text-[10px] text-red-700"
+          >
+            <AlertCircle class="h-3.5 w-3.5 shrink-0 mt-0.5 text-red-600" />
+            <span>{{ errorMessage }}</span>
+          </div>
+
           <!-- Form -->
           <form
             @submit.prevent="handleRegister"
-            class="mx-auto mt-6 w-full max-w-[330px] space-y-3"
+            class="mx-auto mt-5 w-full max-w-[330px] space-y-3"
           >
             <!-- Name -->
             <div>
@@ -83,8 +92,9 @@
                   id="password"
                   v-model="form.password"
                   :type="showPassword ? 'text' : 'password'"
-                  placeholder="Password"
+                  placeholder="Password (min 6 karakter)"
                   required
+                  minlength="6"
                   class="h-[40px] w-full rounded-lg border border-[#DDE6E0] bg-white pl-10 pr-10 text-[11px] text-[#17211B] outline-none transition placeholder:text-[#9AA69F] focus:border-[#22C55E] focus:ring-2 focus:ring-[#22C55E]/10"
                 />
 
@@ -170,9 +180,11 @@
             <!-- Register button -->
             <button
               type="submit"
-              class="mt-1 h-[40px] w-full rounded-lg bg-[#22C55E] text-[11px] font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D]"
+              :disabled="isLoading"
+              class="flex h-[40px] w-full items-center justify-center gap-2 rounded-lg bg-[#22C55E] text-[11px] font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D] disabled:opacity-70"
             >
-              Daftar
+              <Loader2 v-if="isLoading" class="h-3.5 w-3.5 animate-spin" />
+              <span>{{ isLoading ? 'Mendaftarkan...' : 'Daftar' }}</span>
             </button>
           </form>
 
@@ -297,7 +309,7 @@
       <!-- Desktop Form -->
       <div class="hidden items-center px-6 py-8 sm:px-8 sm:py-10 lg:flex lg:p-12">
         <div class="mx-auto w-full max-w-[390px]">
-          <div class="mb-7">
+          <div class="mb-6">
             <p class="mb-2 text-sm font-medium text-[#22C55E]">
               Get started
             </p>
@@ -309,6 +321,15 @@
             <p class="mt-2 text-sm leading-5 text-[#66736A]">
               Start your environmental journey with EcoQuest.
             </p>
+          </div>
+
+          <!-- Error Alert Desktop -->
+          <div
+            v-if="errorMessage"
+            class="mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700"
+          >
+            <AlertCircle class="h-4 w-4 shrink-0 mt-0.5 text-red-600" />
+            <span>{{ errorMessage }}</span>
           </div>
 
           <form
@@ -383,8 +404,9 @@
                   id="desktop-password"
                   v-model="form.password"
                   :type="showPassword ? 'text' : 'password'"
-                  placeholder="Create a password"
+                  placeholder="Create a password (min 6 karakter)"
                   required
+                  minlength="6"
                   class="h-12 w-full rounded-xl border border-[#E2E8E4] pl-11 pr-12 text-sm text-[#17211B] outline-none transition placeholder:text-[#98A39C] focus:border-[#22C55E] focus:ring-4 focus:ring-[#22C55E]/10"
                 />
 
@@ -477,9 +499,11 @@
             <!-- Button -->
             <button
               type="submit"
-              class="mt-2 h-12 w-full rounded-xl bg-[#22C55E] text-sm font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D]"
+              :disabled="isLoading"
+              class="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#22C55E] text-sm font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D] disabled:opacity-70 cursor-pointer"
             >
-              Create Account
+              <Loader2 v-if="isLoading" class="h-4 w-4 animate-spin" />
+              <span>{{ isLoading ? 'Mendaftarkan Akun...' : 'Create Account' }}</span>
             </button>
           </form>
 
@@ -501,6 +525,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   Leaf,
   Mail,
@@ -510,26 +535,56 @@ import {
   User,
   Zap,
   Flame,
-  Trophy
+  Trophy,
+  AlertCircle,
+  Loader2
 } from 'lucide-vue-next'
+import { useAuth } from '../../composables/useAuth'
+
+const router = useRouter()
+const { register } = useAuth()
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
+const isLoading = ref(false)
+const errorMessage = ref('')
 
 const form = ref({
   name: '',
   email: '',
   password: '',
   confirmPassword: '',
-  terms: false
+  terms: true
 })
 
-function handleRegister() {
+async function handleRegister() {
+  errorMessage.value = ''
+
   if (form.value.password !== form.value.confirmPassword) {
-    alert('Password tidak sama.')
+    errorMessage.value = 'Password dan konfirmasi password tidak cocok.'
     return
   }
 
-  console.log(form.value)
+  if (form.value.password.length < 6) {
+    errorMessage.value = 'Password minimal 6 karakter.'
+    return
+  }
+
+  isLoading.value = true
+  await new Promise((resolve) => setTimeout(resolve, 300))
+
+  const result = register({
+    name: form.value.name,
+    email: form.value.email,
+    password: form.value.password
+  })
+
+  isLoading.value = false
+
+  if (result.success) {
+    router.push('/dashboard')
+  } else {
+    errorMessage.value = result.message
+  }
 }
 </script>

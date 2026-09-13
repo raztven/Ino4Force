@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Dafa",
+    "email": "dafa@ecoquest.com",
+    "password": "password123",
+    "level": 5,
+    "levelName": "Eco Explorer",
+    "xp": 1240,
+    "nextLevelXp": 1600,
+    "streak": 7,
+    "avatar": "D",
+    "joinedDate": "August 2026",
+    "role": "Eco Explorer"
+  },
+  {
+    "id": 2,
+    "name": "Sinta",
+    "email": "sinta@ecoquest.com",
+    "password": "password123",
+    "level": 7,
+    "levelName": "Eco Guardian",
+    "xp": 2450,
+    "nextLevelXp": 3000,
+    "streak": 14,
+    "avatar": "S",
+    "joinedDate": "July 2026",
+    "role": "Eco Guardian"
+  },
+  {
+    "id": 3,
+    "name": "Demo User",
+    "email": "demo@ecoquest.com",
+    "password": "password123",
+    "level": 3,
+    "levelName": "Eco Starter",
+    "xp": 850,
+    "nextLevelXp": 1200,
+    "streak": 4,
+    "avatar": "U",
+    "joinedDate": "September 2026",
+    "role": "Eco Starter"
+  }
+]

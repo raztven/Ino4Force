@@ -9,17 +9,46 @@
         <MobileHeader />
 
         <!-- Page Header -->
-        <div class="mb-5 md:mb-7">
-          <h1
-            class="text-[22px] font-bold tracking-tight text-[#17211B] md:text-[28px]"
-          >
-            Community
-          </h1>
+        <div class="mb-5 md:mb-7 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1
+              class="text-[22px] font-bold tracking-tight text-[#17211B] md:text-[28px]"
+            >
+              Community
+            </h1>
 
-          <p class="mt-1 text-xs leading-5 text-[#66736A] md:text-sm">
-            Berbagi aksi, inspirasi, dan dampak bersama komunitas.
-          </p>
+            <p class="mt-1 text-xs leading-5 text-[#66736A] md:text-sm">
+              Bergabung, berbagi, dan tumbuh bersama komunitas ramah lingkungan.
+            </p>
+          </div>
+
+          <!-- Post Action Button -->
+          <button
+            type="button"
+            class="flex items-center justify-center gap-2 rounded-xl bg-[#22C55E] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-[#15803D] active:scale-[0.98] md:text-sm"
+          >
+            <Plus class="h-4 w-4" />
+            Bagikan Cerita
+          </button>
         </div>
+
+        <!-- Community Tabs Filter -->
+        <section class="mb-6 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <button
+            v-for="tab in ['All', 'Discussion', 'Stories', 'Events']"
+            :key="tab"
+            type="button"
+            @click="activeCommunityTab = tab"
+            class="rounded-full px-4 py-2 text-xs font-semibold transition md:px-5"
+            :class="
+              activeCommunityTab === tab
+                ? 'bg-[#15803D] text-white'
+                : 'border border-[#E8EDE9] bg-white text-[#66736A] hover:border-[#CDE8D4]'
+            "
+          >
+            {{ tab }}
+          </button>
+        </section>
 
         <!-- Community Hero -->
         <section
@@ -204,10 +233,59 @@
 
           <!-- Sidebar -->
           <aside class="space-y-4 md:space-y-5">
+            <!-- Popular Communities -->
+            <div
+              class="rounded-2xl border border-[#E8EDE9] bg-white p-5 shadow-xs"
+            >
+              <div class="flex items-center justify-between border-b border-[#F0F4F1] pb-3.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EAF8EE]">
+                    <Users class="h-4 w-4 text-[#22C55E]" />
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold text-[#17211B]">
+                      Popular Communities
+                    </h3>
+                    <p class="text-[11px] text-[#98A39C]">
+                      Komunitas terpopuler
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 space-y-3">
+                <div
+                  v-for="comm in popularCommunitiesList"
+                  :key="comm.id"
+                  class="flex items-center justify-between rounded-xl border border-[#F0F4F1] p-3 transition hover:border-[#22C55E]/40 hover:bg-[#F8FAF8]"
+                >
+                  <div class="flex items-center gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#EAF8EE] text-[#15803D]">
+                      <component :is="getCommunityIcon(comm.icon)" class="h-4 w-4" />
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-[#17211B]">
+                        {{ comm.name }}
+                      </h4>
+                      <p class="text-[10px] text-[#98A39C]">
+                        {{ comm.members }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="rounded-lg bg-[#EAF8EE] px-2.5 py-1 text-[11px] font-bold text-[#15803D] hover:bg-[#22C55E] hover:text-white transition"
+                  >
+                    Join
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <!-- Community Goal -->
             <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-4 md:p-5"
+              class="rounded-2xl border border-[#E8EDE9] bg-white p-4 md:p-5 shadow-xs"
             >
               <div class="flex items-center gap-3">
                 <div
@@ -382,6 +460,7 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import {
   Bell,
   ChevronDown,
@@ -391,21 +470,47 @@ import {
   Sparkles,
   Target,
   Users,
-  Wind
+  Wind,
+  Recycle,
+  Bike,
+  Zap,
+  TreePine
 } from 'lucide-vue-next'
 
 import AppLayout from '@/layouts/AppLayout.vue'
 import CommunityPost from '@/components/cards/CommunityPost.vue'
 import MobileHeader from '@/components/navigation/MobileHeader.vue'
+import { useAuth } from '@/composables/useAuth'
 
 import {
-  user,
+  user as fallbackUser,
   communityPosts,
-  communityStats
+  communityStats,
+  popularCommunities
 } from '@/data/mockData.js'
 
-const currentUser = {
-  ...user,
-  avatar: user?.avatar || 'DA'
+const { currentUser: authUser } = useAuth()
+
+const activeCommunityTab = ref('All')
+
+const currentUser = computed(() => {
+  return authUser.value || fallbackUser
+})
+
+const popularCommunitiesList = ref([...popularCommunities])
+
+function getCommunityIcon(iconName) {
+  switch (iconName) {
+    case 'recycle':
+      return Recycle
+    case 'bike':
+      return Bike
+    case 'zap':
+      return Zap
+    case 'tree':
+      return TreePine
+    default:
+      return Leaf
+  }
 }
 </script>

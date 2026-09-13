@@ -5,39 +5,8 @@
       <!-- Mobile -->
       <main class="mx-auto max-w-[430px] px-4 pb-24 md:hidden">
 
-        <!-- Header -->
-        <header class="flex items-center justify-between py-3">
-          <div class="flex items-center gap-2">
-            <div
-              class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#22C55E]"
-            >
-              <Leaf class="h-4 w-4 text-white" />
-            </div>
-
-            <h1 class="text-sm font-bold text-[#17211B]">
-              EcoQuest
-            </h1>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <button
-              type="button"
-              class="relative flex h-7 w-7 items-center justify-center"
-            >
-              <Bell class="h-4 w-4 text-[#405047]" />
-
-              <span
-                class="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-[#22C55E]"
-              ></span>
-            </button>
-
-            <div
-              class="flex h-7 w-7 items-center justify-center rounded-full bg-[#DCFCE7] text-[9px] font-bold text-[#15803D]"
-            >
-              DA
-            </div>
-          </div>
-        </header>
+        <!-- Mobile Header -->
+        <MobileHeader />
 
         <!-- Intro -->
         <section class="mb-4">
@@ -310,249 +279,186 @@
 
           <!-- Header -->
           <section class="mb-7 flex items-end justify-between">
-
             <div>
               <p class="mb-1 text-sm font-medium text-[#22C55E]">
                 Environmental Impact
               </p>
-
               <h1 class="text-[28px] font-bold text-[#17211B]">
-                Dampakmu
+                Dampak
               </h1>
-
               <p class="mt-1 text-sm text-[#66736A]">
-                Lihat seberapa besar kontribusi positif yang telah kamu buat.
+                Dampak yang sudah kamu berikan. Setiap aksi kecilmu membawa perubahan besar.
               </p>
             </div>
 
-            <!-- Period -->
-            <div
-              class="flex rounded-xl border border-[#E8EDE9] bg-white p-1"
-            >
+            <!-- Period Filter -->
+            <div class="flex rounded-xl border border-[#E8EDE9] bg-white p-1 shadow-xs">
               <button
                 v-for="period in periods"
                 :key="period.value"
                 type="button"
-                class="rounded-lg px-5 py-2 text-xs font-medium"
+                class="rounded-lg px-5 py-2 text-xs font-semibold transition"
                 :class="
                   selectedPeriod === period.value
-                    ? 'bg-[#22C55E] text-white'
-                    : 'text-[#66736A]'
+                    ? 'bg-[#22C55E] text-white shadow-xs'
+                    : 'text-[#66736A] hover:text-[#17211B]'
                 "
                 @click="selectedPeriod = period.value"
               >
                 {{ period.label }}
               </button>
             </div>
-
           </section>
 
-          <!-- Stats -->
-          <section class="mb-5 grid grid-cols-3 gap-5">
-
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-5"
-            >
+          <!-- Top 3 Stats Cards -->
+          <section class="mb-7 grid grid-cols-3 gap-5">
+            <div class="rounded-2xl border border-[#E8EDE9] bg-white p-5 shadow-xs">
               <div class="flex items-center justify-between">
-
-                <div
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E8F8ED]"
-                >
-                  <Recycle class="h-5 w-5 text-[#22C55E]" />
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E8F8ED]">
+                  <Recycle class="h-6 w-6 text-[#22C55E]" />
                 </div>
-
-                <span class="text-[10px] font-semibold text-[#22C55E]">
+                <span class="rounded-full bg-[#EAF8EE] px-2.5 py-0.5 text-xs font-bold text-[#15803D]">
                   +12%
                 </span>
-
               </div>
-
-              <p class="mt-5 text-xs text-[#718078]">
-                Plastik Dikurangi
+              <p class="mt-4 text-xs font-medium text-[#718078]">
+                Plastic Avoided
               </p>
-
               <p class="mt-1 text-2xl font-bold text-[#17211B]">
-                {{ currentImpact.plastic }}
-              </p>
-
-              <p class="mt-1 text-[10px] text-[#98A39C]">
-                item plastik
+                {{ currentImpact.plastic }} <span class="text-sm font-normal text-[#98A39C]">items</span>
               </p>
             </div>
 
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-5"
-            >
+            <div class="rounded-2xl border border-[#E8EDE9] bg-white p-5 shadow-xs">
               <div class="flex items-center justify-between">
-
-                <div
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF4FF]"
-                >
-                  <Cloud class="h-5 w-5 text-[#3B82F6]" />
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EAF4FF]">
+                  <Cloud class="h-6 w-6 text-[#3B82F6]" />
                 </div>
-
-                <span class="text-[10px] font-semibold text-[#22C55E]">
+                <span class="rounded-full bg-[#EAF4FF] px-2.5 py-0.5 text-xs font-bold text-[#1D4ED8]">
                   +18%
                 </span>
-
               </div>
-
-              <p class="mt-5 text-xs text-[#718078]">
-                CO₂ Dikurangi
+              <p class="mt-4 text-xs font-medium text-[#718078]">
+                CO₂ Reduced
               </p>
-
               <p class="mt-1 text-2xl font-bold text-[#17211B]">
-                {{ currentImpact.co2 }}
-              </p>
-
-              <p class="mt-1 text-[10px] text-[#98A39C]">
-                kg CO₂e
+                {{ currentImpact.co2 }} <span class="text-sm font-normal text-[#98A39C]">kg</span>
               </p>
             </div>
 
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-5"
-            >
+            <div class="rounded-2xl border border-[#E8EDE9] bg-white p-5 shadow-xs">
               <div class="flex items-center justify-between">
-
-                <div
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5]"
-                >
-                  <TreePine class="h-5 w-5 text-[#059669]" />
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ECFDF5]">
+                  <TreePine class="h-6 w-6 text-[#059669]" />
                 </div>
-
-                <span class="text-[10px] font-semibold text-[#22C55E]">
+                <span class="rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-xs font-bold text-[#047857]">
                   +8%
                 </span>
-
               </div>
-
-              <p class="mt-5 text-xs text-[#718078]">
-                Pohon Ditanam
+              <p class="mt-4 text-xs font-medium text-[#718078]">
+                Trees Planted
               </p>
-
               <p class="mt-1 text-2xl font-bold text-[#17211B]">
-                {{ currentImpact.trees }}
-              </p>
-
-              <p class="mt-1 text-[10px] text-[#98A39C]">
-                pohon
+                {{ currentImpact.trees }} <span class="text-sm font-normal text-[#98A39C]">seedlings</span>
               </p>
             </div>
-
           </section>
 
           <!-- Charts -->
-          <section class="grid grid-cols-[1.4fr_1fr] gap-5">
-
-            <!-- Trend -->
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-6"
-            >
-
+          <section class="grid grid-cols-[1.4fr_1fr] gap-6">
+            <!-- Trend Chart -->
+            <div class="rounded-2xl border border-[#E8EDE9] bg-white p-6 shadow-xs">
               <div class="flex items-center justify-between">
-
                 <div>
-                  <h2 class="text-sm font-bold text-[#17211B]">
-                    Tren Dampakmu
+                  <h2 class="text-base font-bold text-[#17211B]">
+                    Your Impact Trend
                   </h2>
-
-                  <p class="mt-1 text-xs text-[#98A39C]">
-                    Perkembangan dampak berdasarkan periode
+                  <p class="mt-0.5 text-xs text-[#98A39C]">
+                    Perkembangan dampak positif mingguan
                   </p>
                 </div>
-
-                <div class="flex items-center gap-1 text-xs font-semibold text-[#22C55E]">
-                  <TrendingUp class="h-4 w-4" />
-                  +12%
+                <div class="flex items-center gap-1.5 rounded-full bg-[#EAF8EE] px-3 py-1 text-xs font-bold text-[#15803D]">
+                  <TrendingUp class="h-3.5 w-3.5" />
+                  +12% vs last week
                 </div>
-
               </div>
 
-              <div class="mt-7 flex h-[230px] items-end gap-5">
-
+              <div class="mt-8 flex h-[220px] items-end gap-5 px-2">
                 <div
                   v-for="item in trendData"
                   :key="item.label"
                   class="flex h-full flex-1 flex-col items-center justify-end"
                 >
-
                   <div class="flex w-full flex-1 items-end justify-center">
                     <div
-                      class="w-[55%] rounded-t-lg bg-[#22C55E]"
+                      class="w-[50%] rounded-t-lg bg-[#22C55E] transition-all duration-500 hover:bg-[#15803D]"
                       :style="{
                         height: `${item.value}%`
                       }"
                     ></div>
                   </div>
-
-                  <span class="mt-3 text-[10px] text-[#98A39C]">
+                  <span class="mt-3 text-[11px] font-medium text-[#98A39C]">
                     {{ item.label }}
                   </span>
-
                 </div>
-
               </div>
-
             </div>
 
-            <!-- Category -->
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-6"
-            >
+            <!-- Category Breakdown -->
+            <div class="flex flex-col justify-between rounded-2xl border border-[#E8EDE9] bg-white p-6 shadow-xs">
+              <div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h2 class="text-base font-bold text-[#17211B]">
+                      Impact by Category
+                    </h2>
+                    <p class="mt-0.5 text-xs text-[#98A39C]">
+                      Distribusi aksi ramah lingkungan
+                    </p>
+                  </div>
+                  <span class="text-xs font-bold text-[#17211B]">
+                    Total: {{ totalImpact }}
+                  </span>
+                </div>
 
-              <h2 class="text-sm font-bold text-[#17211B]">
-                Dampak berdasarkan Kategori
-              </h2>
-
-              <p class="mt-1 text-xs text-[#98A39C]">
-                Distribusi kontribusi eco action
-              </p>
-
-              <div class="mt-6 space-y-5">
-
-                <div
-                  v-for="category in categories"
-                  :key="category.name"
-                >
-
-                  <div class="mb-2 flex items-center justify-between">
-
-                    <div class="flex items-center gap-2">
-
-                      <component
-                        :is="category.icon"
-                        class="h-4 w-4"
-                        :class="category.color"
-                      />
-
-                      <span class="text-xs font-medium text-[#17211B]">
-                        {{ category.name }}
+                <div class="mt-6 space-y-4">
+                  <div
+                    v-for="category in categories"
+                    :key="category.name"
+                  >
+                    <div class="mb-1.5 flex items-center justify-between">
+                      <div class="flex items-center gap-2">
+                        <component
+                          :is="category.icon"
+                          class="h-4 w-4"
+                          :class="category.color"
+                        />
+                        <span class="text-xs font-semibold text-[#17211B]">
+                          {{ category.name }}
+                        </span>
+                      </div>
+                      <span class="text-xs font-bold text-[#66736A]">
+                        {{ category.value }}%
                       </span>
-
                     </div>
 
-                    <span class="text-xs font-semibold text-[#718078]">
-                      {{ category.value }}%
-                    </span>
-
+                    <div class="h-2 rounded-full bg-[#EAF0EB]">
+                      <div
+                        class="h-full rounded-full transition-all duration-500"
+                        :class="category.barColor || 'bg-[#22C55E]'"
+                        :style="{
+                          width: `${category.value}%`
+                        }"
+                      ></div>
+                    </div>
                   </div>
-
-                  <div class="h-1.5 rounded-full bg-[#E8EFEA]">
-                    <div
-                      class="h-full rounded-full bg-[#22C55E]"
-                      :style="{
-                        width: `${category.value}%`
-                      }"
-                    ></div>
-                  </div>
-
                 </div>
-
               </div>
 
+              <div class="mt-5 rounded-xl bg-[#F8FAF8] p-3 text-center text-xs text-[#66736A]">
+                🌱 Paling banyak berkontribusi pada <span class="font-bold text-[#15803D]">Reduce Plastic</span> (38%).
+              </div>
             </div>
-
           </section>
 
         </div>
@@ -579,6 +485,7 @@ import {
 } from 'lucide-vue-next'
 
 import AppLayout from '@/layouts/AppLayout.vue'
+import MobileHeader from '@/components/navigation/MobileHeader.vue'
 
 const selectedPeriod = ref('week')
 
@@ -667,38 +574,35 @@ const trendData = computed(() => {
 
 const categories = [
   {
-    name: 'Transportasi',
-    value: 30,
-    icon: Bike,
-    color: 'text-[#3B82F6]',
-    bg: 'bg-[#EAF4FF]'
-  },
-  {
-    name: 'Plastik',
-    value: 25,
+    name: 'Reduce Plastic',
+    value: 38,
     icon: Recycle,
     color: 'text-[#22C55E]',
+    barColor: 'bg-[#22C55E]',
     bg: 'bg-[#E8F8ED]'
   },
   {
-    name: 'Energi',
-    value: 20,
+    name: 'Low Carbon Travel',
+    value: 26,
+    icon: Bike,
+    color: 'text-[#3B82F6]',
+    barColor: 'bg-[#3B82F6]',
+    bg: 'bg-[#EAF4FF]'
+  },
+  {
+    name: 'Save Energy',
+    value: 19,
     icon: Zap,
     color: 'text-[#CA8A04]',
+    barColor: 'bg-[#CA8A04]',
     bg: 'bg-[#FFF8D8]'
   },
   {
-    name: 'Air',
-    value: 15,
-    icon: Droplets,
-    color: 'text-[#0284C7]',
-    bg: 'bg-[#E8F6FF]'
-  },
-  {
-    name: 'Lainnya',
-    value: 10,
+    name: 'Recycle',
+    value: 17,
     icon: Globe2,
     color: 'text-[#059669]',
+    barColor: 'bg-[#059669]',
     bg: 'bg-[#ECFDF5]'
   }
 ]

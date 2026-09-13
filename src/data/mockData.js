@@ -276,38 +276,172 @@ export const impactHistory = [
 export const ecoActions = [
   {
     id: 1,
-    title: 'Mendaur ulang botol plastik',
-    category: 'Daur Ulang',
-    value: '5 botol',
-    impact: '1,2 kg CO₂ tersimpan',
-    date: 'Hari ini'
+    title: 'Using reusable bottle',
+    description: 'Menggunakan botol minum reusable untuk menghindari botol sekali pakai',
+    category: 'Reduce Plastic',
+    value: '1 botol',
+    xp: 25,
+    impact: '0,3 kg CO₂ tersimpan',
+    date: '12 Sep 2026',
+    time: '09:30'
   },
-
   {
     id: 2,
-    title: 'Berjalan kaki daripada berkendara',
-    category: 'Transportasi',
-    value: '3,2 km',
-    impact: '0,8 kg CO₂ tersimpan',
-    date: 'Kemarin'
+    title: 'Turned off lights',
+    description: 'Mematikan lampu dan perangkat elektronik yang tidak digunakan',
+    category: 'Save Energy',
+    value: '3 jam',
+    xp: 20,
+    impact: '0,5 kg CO₂ tersimpan',
+    date: '11 Sep 2026',
+    time: '14:15'
   },
-
   {
     id: 3,
-    title: 'Mematikan perangkat yang tidak digunakan',
-    category: 'Energi',
-    value: '2 jam',
-    impact: '0,5 kg CO₂ tersimpan',
-    date: 'Kemarin'
+    title: 'Biked to campus',
+    description: 'Bersepeda ke kampus menggantikan kendaraan bermotor',
+    category: 'Low Carbon Travel',
+    value: '4,5 km',
+    xp: 40,
+    impact: '1,2 kg CO₂ tersimpan',
+    date: '10 Sep 2026',
+    time: '08:00'
   },
-
   {
     id: 4,
-    title: 'Menggunakan botol minum reusable',
-    category: 'Sampah',
-    value: '1 botol',
-    impact: '0,3 kg CO₂ tersimpan',
-    date: '2 hari lalu'
+    title: 'Recycled plastic bottles',
+    description: 'Mengumpulkan dan mendaur ulang 5 botol plastik bekas',
+    category: 'Recycle',
+    value: '5 botol',
+    xp: 30,
+    impact: '1,0 kg CO₂ tersimpan',
+    date: '9 Sep 2026',
+    time: '16:45'
+  }
+]
+
+// Achievements list for Achievements Screen
+export const allAchievements = [
+  {
+    id: 1,
+    title: 'First Action',
+    description: 'Lakukan aksi eco pertamamu di EcoQuest.',
+    category: 'General',
+    progress: 1,
+    target: 1,
+    unlocked: true,
+    unlockedDate: '1 Sep 2026',
+    icon: 'sparkles'
+  },
+  {
+    id: 2,
+    title: 'Plastic Fighter',
+    description: 'Hindari penggunaan 10 item plastik sekali pakai.',
+    category: 'Plastic',
+    progress: 7,
+    target: 10,
+    unlocked: false,
+    icon: 'recycle'
+  },
+  {
+    id: 3,
+    title: 'Energy Saver',
+    description: 'Hemat energi di rumah selama 5 hari berturut-turut.',
+    category: 'Energy',
+    progress: 5,
+    target: 5,
+    unlocked: true,
+    unlockedDate: '5 Sep 2026',
+    icon: 'zap'
+  },
+  {
+    id: 4,
+    title: 'Green Traveler',
+    description: 'Tempuh jarak low carbon sejauh 50 km.',
+    category: 'Transport',
+    progress: 12,
+    target: 50,
+    unlocked: false,
+    icon: 'bike'
+  },
+  {
+    id: 5,
+    title: 'Tree Protector',
+    description: 'Tanam atau dukung penanaman 5 pohon nyata.',
+    category: 'Nature',
+    progress: 2,
+    target: 5,
+    unlocked: false,
+    icon: 'tree'
+  },
+  {
+    id: 6,
+    title: 'Community Hero',
+    description: 'Ikuti dan selesaikan 3 community quest.',
+    category: 'Community',
+    progress: 1,
+    target: 3,
+    unlocked: false,
+    icon: 'users'
+  },
+  {
+    id: 7,
+    title: 'Consistent One',
+    description: 'Pertahankan daily streak selama 14 hari.',
+    category: 'Streak',
+    progress: 7,
+    target: 14,
+    unlocked: false,
+    icon: 'flame'
+  },
+  {
+    id: 8,
+    title: 'Impact Maker',
+    description: 'Catat total 100 aksi ramah lingkungan.',
+    category: 'Impact',
+    progress: 24,
+    target: 100,
+    unlocked: false,
+    icon: 'trophy'
+  }
+]
+
+// Popular Communities for Community Screen
+export const popularCommunities = [
+  {
+    id: 1,
+    name: 'Eco Warriors',
+    members: '1.2k members',
+    category: 'General',
+    icon: 'leaf'
+  },
+  {
+    id: 2,
+    name: 'Plastic Free Life',
+    members: '4.7k members',
+    category: 'Reduce Plastic',
+    icon: 'recycle'
+  },
+  {
+    id: 3,
+    name: 'Green Transport',
+    members: '6.3k members',
+    category: 'Transport',
+    icon: 'bike'
+  },
+  {
+    id: 4,
+    name: 'Planting Together',
+    members: '4.1k members',
+    category: 'Nature',
+    icon: 'tree'
+  },
+  {
+    id: 5,
+    name: 'Save Energy',
+    members: '3.2k members',
+    category: 'Energy',
+    icon: 'zap'
   }
 ]
 

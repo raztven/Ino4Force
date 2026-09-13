@@ -9,18 +9,33 @@
         <MobileHeader/>
 
         <!-- Page Header -->
-        <div class="mb-5 md:mb-7">
-          <h1
-            class="text-[22px] font-bold tracking-tight text-[#17211B] md:text-[28px]"
-          >
-            Rewards
-          </h1>
+        <div class="mb-5 md:mb-7 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1
+              class="text-[22px] font-bold tracking-tight text-[#17211B] md:text-[28px]"
+            >
+              Rewards
+            </h1>
 
-          <p
-            class="mt-1 text-xs leading-5 text-[#66736A] md:text-sm"
-          >
-            Gunakan XP-mu untuk mendapatkan reward menarik.
-          </p>
+            <p
+              class="mt-1 text-xs leading-5 text-[#66736A] md:text-sm"
+            >
+              Tukar XP kamu dengan berbagai hadiah menarik!
+            </p>
+          </div>
+
+          <!-- XP Points Pill -->
+          <div class="flex items-center gap-3 rounded-2xl border border-[#E8EDE9] bg-white px-5 py-3 shadow-xs">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF8E1]">
+              <Zap class="h-5 w-5 text-[#CA8A04]" />
+            </div>
+            <div>
+              <p class="text-[11px] text-[#98A39C]">Your Points</p>
+              <p class="text-base font-bold text-[#17211B]">
+                {{ (currentUser.xp ?? 1240).toLocaleString('id-ID') }} XP
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- XP Balance -->
@@ -59,7 +74,7 @@
                   <span
                     class="text-2xl font-bold text-white md:text-3xl"
                   >
-                    {{ user.xp.toLocaleString() }}
+                    {{ (currentUser.xp ?? 1240).toLocaleString('id-ID') }}
                   </span>
 
                   <span
@@ -352,24 +367,27 @@ import {
 import AppLayout from '@/layouts/AppLayout.vue'
 import RewardCard from '@/components/cards/RewardCard.vue'
 import MobileHeader from '@/components/navigation/MobileHeader.vue'
+import { useAuth } from '@/composables/useAuth'
 
 import {
-  user,
+  user as fallbackUser,
   rewards,
   redeemedRewards
 } from '@/data/mockData.js'
 
-const currentUser = {
-  avatar: 'DA'
-}
+const { currentUser: authUser } = useAuth()
+
+const currentUser = computed(() => {
+  return authUser.value || fallbackUser
+})
 
 const selectedCategory = ref('All')
 
 const categories = [
   'All',
-  'Digital',
-  'Impact',
-  'Merchandise'
+  'Coupons',
+  'Merchandise',
+  'Badges'
 ]
 
 const filteredRewards = computed(() => {
@@ -378,6 +396,12 @@ const filteredRewards = computed(() => {
   }
 
   return rewards.filter((reward) => {
+    if (selectedCategory.value === 'Badges') {
+      return reward.category === 'Digital' || reward.category === 'Badges'
+    }
+    if (selectedCategory.value === 'Coupons') {
+      return reward.category === 'Coupons' || reward.category === 'Dampak' || reward.category === 'Impact'
+    }
     return reward.category === selectedCategory.value
   })
 })
@@ -395,9 +419,10 @@ const xpSpent = computed(() => {
 })
 
 const nextReward = computed(() => {
+  const currentXp = Number(currentUser.value.xp ?? 1240)
   return rewards
     .filter((reward) => {
-      return reward.available && reward.cost > user.xp
+      return reward.available && reward.cost > currentXp
     })
     .sort((a, b) => a.cost - b.cost)[0]
 })

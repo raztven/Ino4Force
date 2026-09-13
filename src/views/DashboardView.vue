@@ -367,108 +367,274 @@
 
       <!-- Desktop -->
       <main class="hidden md:block">
-
-        <div class="mx-auto max-w-[1400px] px-6 pb-8">
-
+        <div class="mx-auto max-w-[1400px] px-6 pb-10">
           <!-- Desktop Header -->
-          <section
-            class="mb-7 flex items-end justify-between"
-          >
-
+          <section class="mb-7 flex items-end justify-between">
             <div>
-
-              <p
-                class="mb-1 text-sm font-medium text-[#22C55E]"
-              >
+              <p class="mb-1 text-sm font-medium text-[#22C55E]">
                 {{ formattedDate }}
               </p>
-
-              <h1
-                class="text-[28px] font-bold text-[#17211B]"
-              >
-                Selamat pagi, {{ currentUser.name }}! 👋
+              <h1 class="text-[28px] font-bold text-[#17211B]">
+                Good morning, {{ currentUser.name }}! 👋
               </h1>
-
               <p class="mt-1 text-sm text-[#66736A]">
-                Siap membuat dampak positif hari ini?
+                Setiap aksi kecil berarti. Yuk lanjutkan perjalananmu!
               </p>
-
             </div>
 
             <RouterLink
               to="/eco-action"
-              class="flex h-10 items-center gap-2 rounded-xl bg-[#22C55E] px-4 text-sm font-semibold text-white transition hover:bg-[#15803D]"
+              class="flex h-11 items-center gap-2 rounded-xl bg-[#22C55E] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#15803D] active:scale-[0.98]"
             >
               <Plus class="h-4 w-4" />
-              Catat Aksi Eco
+              + Record Eco Action
             </RouterLink>
-
           </section>
 
-          <!-- Desktop Stats -->
-          <div class="grid grid-cols-3 gap-5">
+          <!-- Top Row Stats -->
+          <section class="mb-7 grid grid-cols-3 gap-5">
+            <!-- Level Card -->
+            <div class="flex flex-col justify-between rounded-2xl border border-[#E8EDE9] bg-white p-5 shadow-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#EAF8EE]">
+                    <Sparkles class="h-6 w-6 text-[#22C55E]" />
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-[#17211B]">
+                      Level {{ currentUser.level }}
+                    </h3>
+                    <p class="text-xs text-[#98A39C]">
+                      {{ currentUser.levelName || 'Eco Explorer' }}
+                    </p>
+                  </div>
+                </div>
+                <span class="rounded-full bg-[#EAF8EE] px-2.5 py-1 text-xs font-bold text-[#15803D]">
+                  Rank #{{ currentUser.rank || 12 }}
+                </span>
+              </div>
 
-            <!-- Level -->
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-5"
-            >
-
-              <Sparkles class="h-5 w-5 text-[#9333EA]" />
-
-              <p class="mt-4 text-xs text-[#66736A]">
-                Level Saat Ini
-              </p>
-
-              <p
-                class="mt-1 text-2xl font-bold text-[#17211B]"
-              >
-                {{ currentUser.level }}
-              </p>
-
+              <div class="mt-6">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-[#66736A]">Progress Level</span>
+                  <span class="font-semibold text-[#17211B]">
+                    {{ currentUser.xp ?? 1240 }} / {{ currentUser.nextLevelXp ?? 1600 }} XP
+                  </span>
+                </div>
+                <div class="mt-2 h-2 overflow-hidden rounded-full bg-[#EAF0EB]">
+                  <div
+                    class="h-full rounded-full bg-[#22C55E] transition-all duration-300"
+                    :style="{ width: `${levelProgress}%` }"
+                  ></div>
+                </div>
+              </div>
             </div>
 
-            <!-- XP -->
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-5"
-            >
+            <!-- Streak Card -->
+            <div class="flex flex-col justify-between rounded-2xl border border-[#E8EDE9] bg-white p-5 shadow-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF3EB]">
+                    <Flame class="h-6 w-6 text-[#EA580C]" />
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-[#17211B]">
+                      {{ currentUser.streak ?? 7 }} Days Streak
+                    </h3>
+                    <p class="text-xs text-[#98A39C]">
+                      Konsistensi mingguan aktif
+                    </p>
+                  </div>
+                </div>
+                <span class="flex items-center gap-1 text-xs font-bold text-[#EA580C]">
+                  🔥 Aktif
+                </span>
+              </div>
 
-              <Zap class="h-5 w-5 text-[#CA8A04]" />
-
-              <p class="mt-4 text-xs text-[#66736A]">
-                Total XP
-              </p>
-
-              <p
-                class="mt-1 text-2xl font-bold text-[#17211B]"
-              >
-                {{ currentUser.xp ?? 1240 }}
-              </p>
-
+              <div class="mt-4 flex items-center justify-between gap-1 pt-2">
+                <div
+                  v-for="(day, idx) in ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']"
+                  :key="day"
+                  class="flex flex-1 flex-col items-center gap-1"
+                >
+                  <div
+                    class="flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-semibold"
+                    :class="
+                      idx < (currentUser.streak ?? 7)
+                        ? 'bg-[#EA580C] text-white'
+                        : 'bg-[#F0F4F1] text-[#98A39C]'
+                    "
+                  >
+                    ✓
+                  </div>
+                  <span class="text-[10px] text-[#98A39C]">{{ day }}</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Streak -->
-            <div
-              class="rounded-2xl border border-[#E8EDE9] bg-white p-5"
-            >
+            <!-- Your Impact Summary Card -->
+            <div class="flex flex-col justify-between rounded-2xl border border-[#E8EDE9] bg-white p-5 shadow-xs">
+              <div class="flex items-center justify-between border-b border-[#F0F4F1] pb-3">
+                <div class="flex items-center gap-2">
+                  <Sprout class="h-5 w-5 text-[#22C55E]" />
+                  <h3 class="text-sm font-bold text-[#17211B]">Your Impact</h3>
+                </div>
+                <RouterLink to="/impact" class="text-xs font-semibold text-[#22C55E] hover:underline">
+                  Detail →
+                </RouterLink>
+              </div>
 
-              <Flame class="h-5 w-5 text-[#EA580C]" />
+              <div class="mt-3 grid grid-cols-3 gap-2 text-center">
+                <div class="rounded-xl bg-[#F8FAF8] p-2.5">
+                  <p class="text-base font-bold text-[#17211B]">18</p>
+                  <p class="mt-0.5 text-[10px] text-[#66736A]">Plastic Avoided</p>
+                </div>
+                <div class="rounded-xl bg-[#F8FAF8] p-2.5">
+                  <p class="text-base font-bold text-[#17211B]">{{ ecoActions }}</p>
+                  <p class="mt-0.5 text-[10px] text-[#66736A]">Eco Actions</p>
+                </div>
+                <div class="rounded-xl bg-[#F8FAF8] p-2.5">
+                  <p class="text-base font-bold text-[#17211B]">{{ lowCarbonDistance }} km</p>
+                  <p class="mt-0.5 text-[10px] text-[#66736A]">Low Carbon</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
-              <p class="mt-4 text-xs text-[#66736A]">
-                Streak Saat Ini
-              </p>
+          <!-- Middle Row: Next Quest & Habit Progress -->
+          <section class="grid grid-cols-1 gap-6 lg:grid-cols-[1.3fr_1fr]">
+            <!-- Your Next Quest -->
+            <div class="rounded-2xl border border-[#E8EDE9] bg-white p-6 shadow-xs">
+              <div class="mb-5 flex items-center justify-between">
+                <div>
+                  <h2 class="text-base font-bold text-[#17211B]">
+                    Your Next Quest
+                  </h2>
+                  <p class="mt-0.5 text-xs text-[#98A39C]">
+                    Selesaikan misi aktif untuk mendapatkan XP ekstra
+                  </p>
+                </div>
+                <RouterLink
+                  to="/missions"
+                  class="text-xs font-semibold text-[#22C55E] hover:underline"
+                >
+                  Lihat Semua Quest →
+                </RouterLink>
+              </div>
 
-              <p
-                class="mt-1 text-2xl font-bold text-[#17211B]"
+              <div
+                v-if="nextQuest"
+                class="rounded-xl border border-[#DCEBDD] bg-[#F7FCF8] p-5 transition hover:shadow-xs"
               >
-                {{ currentUser.streak ?? 7 }} hari
-              </p>
+                <div class="flex items-start gap-4">
+                  <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-xs">
+                    <Recycle class="h-7 w-7 text-[#22C55E]" />
+                  </div>
 
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <h3 class="text-base font-bold text-[#17211B]">
+                        {{ nextQuest.title || 'Reduce Plastic' }}
+                      </h3>
+                      <span class="rounded-full bg-[#EAF8EE] px-3 py-1 text-xs font-bold text-[#15803D]">
+                        +{{ nextQuest.xp ?? 75 }} XP
+                      </span>
+                    </div>
+
+                    <p class="mt-1 text-xs leading-5 text-[#66736A]">
+                      {{ nextQuest.description || 'Gunakan botol minum reusable selama 3 hari untuk mengurangi sampah plastik.' }}
+                    </p>
+
+                    <div class="mt-4">
+                      <div class="flex items-center justify-between text-xs">
+                        <span class="text-[#66736A]">{{ nextQuest.step || 'Day 2 of 3' }}</span>
+                        <span class="font-bold text-[#22C55E]">{{ questProgress }}%</span>
+                      </div>
+                      <div class="mt-1.5 h-2 overflow-hidden rounded-full bg-[#E5EFE8]">
+                        <div
+                          class="h-full rounded-full bg-[#22C55E]"
+                          :style="{ width: `${questProgress}%` }"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-5 flex items-center justify-end gap-3 border-t border-[#E8EDE9]/60 pt-4">
+                  <RouterLink
+                    to="/missions"
+                    class="rounded-xl border border-[#DCEBDD] bg-white px-4 py-2 text-xs font-semibold text-[#66736A] hover:bg-[#F8FAF8]"
+                  >
+                    Detail
+                  </RouterLink>
+                  <RouterLink
+                    to="/missions"
+                    class="rounded-xl bg-[#22C55E] px-5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#15803D]"
+                  >
+                    View Quest
+                  </RouterLink>
+                </div>
+              </div>
             </div>
 
-          </div>
+            <!-- Habit Progress -->
+            <div class="flex flex-col justify-between rounded-2xl border border-[#E8EDE9] bg-white p-6 shadow-xs">
+              <div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h2 class="text-base font-bold text-[#17211B]">
+                      Habit Progress
+                    </h2>
+                    <p class="mt-0.5 text-xs text-[#98A39C]">
+                      Kebiasaan berkelanjutanmu
+                    </p>
+                  </div>
+                  <span class="rounded-full bg-[#EAF8EE] px-2.5 py-1 text-xs font-bold text-[#22C55E]">
+                    78% Konsisten
+                  </span>
+                </div>
 
+                <!-- Habit Item 1 -->
+                <div class="mt-5 rounded-xl border border-[#E8EDE9] p-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                      <Recycle class="h-4 w-4 text-[#22C55E]" />
+                      <h4 class="text-xs font-bold text-[#17211B]">Reduce Plastic</h4>
+                    </div>
+                    <span class="text-xs font-bold text-[#22C55E]">78%</span>
+                  </div>
+                  <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-[#EAF0EB]">
+                    <div class="h-full w-[78%] rounded-full bg-[#22C55E]"></div>
+                  </div>
+                  <p class="mt-2 text-[11px] text-[#98A39C]">
+                    Next milestone: Use reusable bottle for 14 days
+                  </p>
+                </div>
+
+                <!-- Habit Item 2 -->
+                <div class="mt-3 rounded-xl border border-[#E8EDE9] p-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                      <Zap class="h-4 w-4 text-[#CA8A04]" />
+                      <h4 class="text-xs font-bold text-[#17211B]">Save Energy</h4>
+                    </div>
+                    <span class="text-xs font-bold text-[#CA8A04]">60%</span>
+                  </div>
+                  <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-[#EAF0EB]">
+                    <div class="h-full w-[60%] rounded-full bg-[#CA8A04]"></div>
+                  </div>
+                  <p class="mt-2 text-[11px] text-[#98A39C]">
+                    Next milestone: Turn off idle devices for 7 days
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-5 rounded-xl bg-[#F1FBF3] p-3 text-center text-xs font-medium text-[#15803D]">
+                🎉 Kamu berpeluang mendapatkan badge <span class="font-bold">Consistent One</span> minggu ini!
+              </div>
+            </div>
+          </section>
         </div>
-
       </main>
 
     </div>
@@ -486,6 +652,7 @@ import {
   Plus,
   Recycle,
   Sparkles,
+  Sprout,
   TrendingUp,
   TreePine,
   Zap
@@ -495,13 +662,16 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import MobileHeader from '@/components/navigation/MobileHeader.vue'
 
 import {
-  user,
+  user as fallbackUser,
   missions,
   impact
 } from '../data/mockData'
+import { useAuth } from '../composables/useAuth'
 
-const currentUser = ref({
-  ...user
+const { currentUser: authUser } = useAuth()
+
+const currentUser = computed(() => {
+  return authUser.value || fallbackUser
 })
 
 const missionList = ref(

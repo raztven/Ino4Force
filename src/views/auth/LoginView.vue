@@ -21,7 +21,7 @@
           </div>
 
           <!-- Heading -->
-          <div class="mt-10 text-center">
+          <div class="mt-8 text-center">
             <h2 class="text-[21px] font-bold text-[#17211B]">
               Welcome Back!
             </h2>
@@ -33,10 +33,28 @@
             </p>
           </div>
 
+          <!-- Error Alert Mobile -->
+          <div
+            v-if="errorMessage"
+            class="mx-auto mt-4 max-w-[330px] flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-2.5 text-[10px] text-red-700"
+          >
+            <AlertCircle class="h-3.5 w-3.5 shrink-0 mt-0.5 text-red-600" />
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Success Alert Mobile -->
+          <div
+            v-if="successMessage"
+            class="mx-auto mt-4 max-w-[330px] flex items-start gap-2 rounded-lg border border-[#22C55E]/30 bg-[#EAF8EE] p-2.5 text-[10px] text-[#15803D]"
+          >
+            <CheckCircle2 class="h-3.5 w-3.5 shrink-0 mt-0.5 text-[#22C55E]" />
+            <span>{{ successMessage }}</span>
+          </div>
+
           <!-- Form -->
           <form
             @submit.prevent="handleLogin"
-            class="mx-auto mt-7 w-full max-w-[330px] space-y-3"
+            class="mx-auto mt-5 w-full max-w-[330px] space-y-3"
           >
             <!-- Email -->
             <div>
@@ -48,8 +66,8 @@
                 <input
                   id="email"
                   v-model="form.email"
-                  type="email"
-                  placeholder="Email atau Username"
+                  type="text"
+                  placeholder="Email atau Username (ex: dafa@ecoquest.com)"
                   required
                   class="h-[40px] w-full rounded-lg border border-[#DDE6E0] bg-white pl-10 pr-3 text-[11px] text-[#17211B] outline-none transition placeholder:text-[#9AA69F] focus:border-[#22C55E] focus:ring-2 focus:ring-[#22C55E]/10"
                 />
@@ -90,11 +108,18 @@
               </div>
             </div>
 
-            <!-- Forgot password -->
-            <div class="flex justify-end pt-0.5">
+            <!-- Forgot password & Demo button -->
+            <div class="flex items-center justify-between pt-0.5">
               <button
                 type="button"
-                class="text-[9px] font-medium text-[#22C55E] transition hover:text-[#15803D]"
+                @click="fillDemoAccount"
+                class="text-[10px] font-semibold text-[#22C55E]"
+              >
+                Gunakan Akun Demo
+              </button>
+              <button
+                type="button"
+                class="text-[10px] font-medium text-[#718078] transition hover:text-[#15803D]"
               >
                 Lupa password?
               </button>
@@ -103,14 +128,16 @@
             <!-- Login button -->
             <button
               type="submit"
-              class="h-[40px] w-full rounded-lg bg-[#22C55E] text-[11px] font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D]"
+              :disabled="isLoading"
+              class="flex h-[40px] w-full items-center justify-center gap-2 rounded-lg bg-[#22C55E] text-[11px] font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D] disabled:opacity-70"
             >
-              Login
+              <Loader2 v-if="isLoading" class="h-3.5 w-3.5 animate-spin" />
+              <span>{{ isLoading ? 'Memproses...' : 'Login' }}</span>
             </button>
           </form>
 
           <!-- Register -->
-          <p class="mt-7 text-center text-[9px] text-[#718078]">
+          <p class="mt-6 text-center text-[10px] text-[#718078]">
             Belum punya akun?
 
             <RouterLink
@@ -230,7 +257,7 @@
       <!-- Desktop Form -->
       <div class="hidden items-center px-6 py-8 sm:px-8 sm:py-10 lg:flex lg:p-12">
         <div class="mx-auto w-full max-w-[390px]">
-          <div class="mb-8">
+          <div class="mb-6">
             <p class="mb-2 text-sm font-medium text-[#22C55E]">
               Welcome back
             </p>
@@ -244,9 +271,27 @@
             </p>
           </div>
 
+          <!-- Error Alert Desktop -->
+          <div
+            v-if="errorMessage"
+            class="mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700"
+          >
+            <AlertCircle class="h-4 w-4 shrink-0 mt-0.5 text-red-600" />
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Success Alert Desktop -->
+          <div
+            v-if="successMessage"
+            class="mb-4 flex items-start gap-3 rounded-xl border border-[#22C55E]/30 bg-[#EAF8EE] p-3 text-xs text-[#15803D]"
+          >
+            <CheckCircle2 class="h-4 w-4 shrink-0 mt-0.5 text-[#22C55E]" />
+            <span>{{ successMessage }}</span>
+          </div>
+
           <form
             @submit.prevent="handleLogin"
-            class="space-y-5"
+            class="space-y-4"
           >
             <!-- Email -->
             <div>
@@ -265,8 +310,8 @@
                 <input
                   id="desktop-email"
                   v-model="form.email"
-                  type="email"
-                  placeholder="you@example.com"
+                  type="text"
+                  placeholder="dafa@ecoquest.com"
                   required
                   class="h-12 w-full rounded-xl border border-[#E2E8E4] pl-11 pr-4 text-sm text-[#17211B] outline-none transition placeholder:text-[#98A39C] focus:border-[#22C55E] focus:ring-4 focus:ring-[#22C55E]/10"
                 />
@@ -285,9 +330,10 @@
 
                 <button
                   type="button"
-                  class="text-sm text-[#22C55E] transition hover:text-[#15803D]"
+                  @click="fillDemoAccount"
+                  class="text-xs font-semibold text-[#22C55E] transition hover:text-[#15803D]"
                 >
-                  Forgot password?
+                  Gunakan Demo
                 </button>
               </div>
 
@@ -300,7 +346,7 @@
                   id="desktop-password"
                   v-model="form.password"
                   :type="showPassword ? 'text' : 'password'"
-                  placeholder="Enter your password"
+                  placeholder="Masukkan password"
                   required
                   class="h-12 w-full rounded-xl border border-[#E2E8E4] pl-11 pr-12 text-sm text-[#17211B] outline-none transition placeholder:text-[#98A39C] focus:border-[#22C55E] focus:ring-4 focus:ring-[#22C55E]/10"
                 />
@@ -324,28 +370,66 @@
             </div>
 
             <!-- Remember -->
-            <label class="flex cursor-pointer items-center gap-3">
-              <input
-                v-model="form.remember"
-                type="checkbox"
-                class="h-4 w-4 accent-[#22C55E]"
-              />
+            <div class="flex items-center justify-between">
+              <label class="flex cursor-pointer items-center gap-2.5">
+                <input
+                  v-model="form.remember"
+                  type="checkbox"
+                  class="h-4 w-4 rounded accent-[#22C55E]"
+                />
 
-              <span class="text-sm text-[#66736A]">
-                Remember me
+                <span class="text-xs text-[#66736A]">
+                  Remember me
+                </span>
+              </label>
+
+              <span class="text-xs text-[#98A39C]">
+                Demo pass: <code class="font-mono text-[#15803D] font-semibold">password123</code>
               </span>
-            </label>
+            </div>
 
             <!-- Button -->
             <button
               type="submit"
-              class="h-12 w-full rounded-xl bg-[#22C55E] text-sm font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D]"
+              :disabled="isLoading"
+              class="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#22C55E] text-sm font-semibold text-white transition hover:bg-[#16A34A] active:bg-[#15803D] disabled:opacity-70 cursor-pointer"
             >
-              Sign In
+              <Loader2 v-if="isLoading" class="h-4 w-4 animate-spin" />
+              <span>{{ isLoading ? 'Memproses Masuk...' : 'Sign In' }}</span>
             </button>
           </form>
 
-          <p class="mt-7 text-center text-sm text-[#66736A]">
+          <!-- Quick Presets -->
+          <div class="mt-5 rounded-xl border border-[#E8EDE9] bg-[#F8FAF8] p-3">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-[#98A39C] mb-2">
+              Akun Cepat (Data JSON)
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <button
+                type="button"
+                @click="quickLogin('dafa@ecoquest.com', 'password123')"
+                class="rounded-lg bg-white border border-[#E2E8E4] px-2.5 py-1 text-xs font-medium text-[#17211B] hover:border-[#22C55E] hover:text-[#15803D] transition"
+              >
+                🌱 Dafa (Lvl 5)
+              </button>
+              <button
+                type="button"
+                @click="quickLogin('sinta@ecoquest.com', 'password123')"
+                class="rounded-lg bg-white border border-[#E2E8E4] px-2.5 py-1 text-xs font-medium text-[#17211B] hover:border-[#22C55E] hover:text-[#15803D] transition"
+              >
+                🛡️ Sinta (Lvl 7)
+              </button>
+              <button
+                type="button"
+                @click="quickLogin('demo@ecoquest.com', 'password123')"
+                class="rounded-lg bg-white border border-[#E2E8E4] px-2.5 py-1 text-xs font-medium text-[#17211B] hover:border-[#22C55E] hover:text-[#15803D] transition"
+              >
+                ✨ Demo (Lvl 3)
+              </button>
+            </div>
+          </div>
+
+          <p class="mt-6 text-center text-sm text-[#66736A]">
             Don't have an account?
 
             <RouterLink
@@ -362,7 +446,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import {
   Leaf,
   Mail,
@@ -371,18 +456,62 @@ import {
   EyeOff,
   Zap,
   Flame,
-  Trophy
+  Trophy,
+  AlertCircle,
+  CheckCircle2,
+  Loader2
 } from 'lucide-vue-next'
+import { useAuth } from '../../composables/useAuth'
+
+const router = useRouter()
+const route = useRoute()
+const { login } = useAuth()
 
 const showPassword = ref(false)
+const isLoading = ref(false)
+const errorMessage = ref('')
+const successMessage = ref('')
 
 const form = ref({
-  email: '',
-  password: '',
-  remember: false
+  email: 'dafa@ecoquest.com',
+  password: 'password123',
+  remember: true
 })
 
-function handleLogin() {
-  console.log(form.value)
+onMounted(() => {
+  if (route.query.registered) {
+    successMessage.value = 'Akun berhasil dibuat! Silakan masuk.'
+  }
+})
+
+function fillDemoAccount() {
+  form.value.email = 'dafa@ecoquest.com'
+  form.value.password = 'password123'
+  errorMessage.value = ''
+}
+
+function quickLogin(email, password) {
+  form.value.email = email
+  form.value.password = password
+  handleLogin()
+}
+
+async function handleLogin() {
+  errorMessage.value = ''
+  successMessage.value = ''
+  isLoading.value = true
+
+  await new Promise((resolve) => setTimeout(resolve, 300))
+
+  const result = login(form.value.email, form.value.password, form.value.remember)
+
+  isLoading.value = false
+
+  if (result.success) {
+    const redirectPath = route.query.redirect || '/dashboard'
+    router.push(redirectPath)
+  } else {
+    errorMessage.value = result.message
+  }
 }
 </script>

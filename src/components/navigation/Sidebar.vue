@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <nav class="flex-1 px-4 py-5">
+    <nav class="flex-1 px-4 py-5 overflow-y-auto">
       <p class="mb-3 px-3 text-[11px] font-semibold uppercase tracking-wider text-[#98A39C]">
         Menu
       </p>
@@ -87,27 +87,29 @@
       </div>
     </nav>
 
-    <div class="border-t border-[#E8EDE9] p-4">
+    <div class="border-t border-[#E8EDE9] p-3">
       <div class="flex items-center gap-3 rounded-xl bg-[#F8FAF8] p-3">
-        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-[#DCFCE7] text-sm font-semibold text-[#15803D]">
-          D
+        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#DCFCE7] text-sm font-semibold text-[#15803D]">
+          {{ activeUser.avatar || 'U' }}
         </div>
 
         <div class="min-w-0 flex-1">
           <p class="truncate text-sm font-semibold text-[#17211B]">
-            Dafa
+            {{ activeUser.name || 'User' }}
           </p>
 
           <p class="truncate text-xs text-[#98A39C]">
-            Eco Explorer
+            {{ activeUser.levelName || 'Eco Member' }}
           </p>
         </div>
 
         <button
           type="button"
-          class="text-[#98A39C] transition hover:text-[#66736A]"
+          @click="handleLogout"
+          title="Logout"
+          class="flex h-8 w-8 items-center justify-center rounded-lg text-[#98A39C] transition hover:bg-[#FEF2F2] hover:text-[#DC2626]"
         >
-          <MoreHorizontal class="h-[18px] w-[18px]" />
+          <LogOut class="h-4 w-4" />
         </button>
       </div>
     </div>
@@ -115,21 +117,32 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import {
   Leaf,
   LayoutDashboard,
   ListChecks,
+  PlusCircle,
   Trophy,
   Medal,
   Sprout,
   Gift,
+  Award,
   Users,
   UserCircle,
-  MoreHorizontal
+  LogOut
 } from 'lucide-vue-next'
+import { useAuth } from '../../composables/useAuth'
+import { user as fallbackUser } from '../../data/mockData'
 
 const route = useRoute()
+const router = useRouter()
+const { currentUser, logout } = useAuth()
+
+const activeUser = computed(() => {
+  return currentUser.value || fallbackUser
+})
 
 const mainMenu = [
   {
@@ -138,9 +151,14 @@ const mainMenu = [
     icon: LayoutDashboard
   },
   {
-    name: 'Missions',
+    name: 'Quest',
     to: '/missions',
     icon: ListChecks
+  },
+  {
+    name: 'Eco Action',
+    to: '/eco-action',
+    icon: PlusCircle
   },
   {
     name: 'Challenges',
@@ -163,6 +181,11 @@ const mainMenu = [
     icon: Gift
   },
   {
+    name: 'Achievements',
+    to: '/achievements',
+    icon: Award
+  },
+  {
     name: 'Community',
     to: '/community',
     icon: Users
@@ -179,5 +202,10 @@ const personalMenu = [
 
 function isActive(path) {
   return route.path === path
+}
+
+function handleLogout() {
+  logout()
+  router.push('/login')
 }
 </script>

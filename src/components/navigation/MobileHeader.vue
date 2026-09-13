@@ -24,21 +24,25 @@
         ></span>
       </button>
 
-      <div
+      <RouterLink
+        to="/profile"
         class="flex h-7 w-7 items-center justify-center rounded-full bg-[#DCFCE7] text-[10px] font-bold text-[#15803D]"
       >
-        {{ currentUser.avatar }}
-      </div>
+        {{ activeUser.avatar || 'U' }}
+      </RouterLink>
     </div>
   </header>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { Bell, Leaf } from 'lucide-vue-next'
-import { user } from '../../data/mockData.js'
+import { useAuth } from '../../composables/useAuth.js'
+import { user as fallbackUser } from '../../data/mockData.js'
 
-const currentUser = {
-  ...user,
-  avatar: user?.avatar || 'DA'
-}
+const { currentUser } = useAuth()
+
+const activeUser = computed(() => {
+  return currentUser.value || fallbackUser
+})
 </script>
